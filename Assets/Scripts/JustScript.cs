@@ -1,16 +1,7 @@
 using UnityEngine;
 
-public class JustScript : MonoBehaviour
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+public class JustScript : MonoBehaviour {
+    public void OpenTg() {
+        Application.OpenURL("https://t.me/risha_artist");
     }
 }
