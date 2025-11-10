@@ -23,6 +23,20 @@ public class ProgressBarSprites : MonoBehaviour {
     [SerializeField]
     private float _yellowPercent = 0.5f, _redPercent = 0.3f;
 
+    [SerializeField]
+    private Animation _animation;
+
+    public void OnClicked() {
+        if (_slider.value >= 1f) {
+            _slider.value = 0f;
+        } else {
+            _slider.value += 0.1f;
+        }
+
+        _animation.Stop();
+        _animation.Play();
+    }
+
     private void Awake() {
         _slider.onValueChanged.AddListener(OnSliderValueChanged);
         UpdateSprites();
