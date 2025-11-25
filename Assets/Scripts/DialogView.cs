@@ -57,23 +57,11 @@ public class DialogView : MonoBehaviour {
 
         foreach (string line in answers) {
             await Print(line);
-            await WaitForClick(_cts.Token);
+            await Utils.WaitForClick(_cts.Token);
         }
     }
 
-    private async UniTask WaitForClick(CancellationToken token) {
-        while (true) {
-            if (token.IsCancellationRequested) {
-                return;
-            }
-
-            if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) {
-                return;
-            }
-
-            await UniTask.Yield(PlayerLoopTiming.Update, token);
-        }
-    }
+   
 
     private async UniTask Print(string text) {
         _replyText.text = "";
