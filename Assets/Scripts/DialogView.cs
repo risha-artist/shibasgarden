@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class DialogView : MonoBehaviour {
     [SerializeField]
@@ -24,6 +25,12 @@ public class DialogView : MonoBehaviour {
     [SerializeField]
     private TextMeshProUGUI _replyText;
 
+    [SerializeField]
+    private GameObject _backButton;
+
+    [SerializeField]
+    private Slider _slider;
+
     private CancellationTokenSource _cts;
 
     public void SelectVariant(int index) {
@@ -39,6 +46,8 @@ public class DialogView : MonoBehaviour {
     }
 
     public void ResetDialog() {
+        _slider.value = 0;
+        _backButton.gameObject.SetActive(false);
         _playerAvatar.gameObject.SetActive(true);
         _grandmaAvatar.gameObject.SetActive(false);
         _speechPlayer.gameObject.SetActive(true);
@@ -55,25 +64,31 @@ public class DialogView : MonoBehaviour {
         _playerAvatar.gameObject.SetActive(false);
         _grandmaAvatar.gameObject.SetActive(true);
 
-        foreach (string line in answers) {
-            await Print(line);
+        _backButton.gameObject.SetActive(true);
+
+        for (int index = 0; index < answers.Count; index++) {
+            string line = answers[index];
+            float part = 1f / answers.Count;
+            await Print(line, part * index, part * (index + 1));
             await Utils.WaitForClick(_cts.Token);
         }
     }
 
-   
-
-    private async UniTask Print(string text) {
+    private async UniTask Print(string text, float percent, float maxPercent) {
         _replyText.text = "";
         CancellationToken token = _cts.Token;
 
-        foreach (char c in text) {
+        for (int index = 0; index < text.Length; index++) {
+            char c = text[index];
             if (token.IsCancellationRequested) {
                 return;
             }
 
             _replyText.text += c;
+            _slider.value = percent + (maxPercent - percent) * index / text.Length;
             await UniTask.Delay(25, cancellationToken: token);
         }
+
+        _slider.value = maxPercent;
     }
 }

@@ -2,11 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class RotatingCardView : MonoBehaviour {
+    [Header("Card view")]
+    [SerializeField]
+    private Image _image;
+
+    [SerializeField]
+    private TextMeshProUGUI _header, _explain, _effect, _energy;
+
+    [SerializeField]
+    private List<GameObject> _stars;
+
+    [Header("Other")]
     [SerializeField]
     private Animation _animation;
 
@@ -14,17 +26,14 @@ public class RotatingCardView : MonoBehaviour {
     private AnimationClip _flipStart, _flipEnd;
 
     [SerializeField]
-    private Image _image;
+    private List<CardData> _sprites;
 
-    [SerializeField]
-    private List<Sprite> _sprites;
-
-    private Queue<Sprite> _spriteQueue;
+    private Queue<CardData> _datasQueue;
 
     private bool _isAnimating;
 
     private void Awake() {
-        _spriteQueue = new Queue<Sprite>(_sprites.OrderBy(v => Random.Range(0, 1f)));
+        _datasQueue = new Queue<CardData>(_sprites.OrderBy(v => Random.Range(0, 1f)));
         ShowNextCard();
     }
 
@@ -47,8 +56,29 @@ public class RotatingCardView : MonoBehaviour {
     }
 
     private void ShowNextCard() {
-        var sprite = _spriteQueue.Dequeue();
-        _image.sprite = sprite;
-        _spriteQueue.Enqueue(sprite);
+        var data = _datasQueue.Dequeue();
+        _image.sprite = data.Icon;
+        _header.text = data.Header;
+        _explain.text = data.Explain;
+        _effect.text = data.Effect;
+        _energy.text = data.Energy;
+        for (int i = 0; i < _stars.Count; i++) {
+            _stars[i].SetActive(i < data.Stars);
+        }
+
+        _datasQueue.Enqueue(data);
     }
+}
+
+[Serializable]
+public class CardData {
+    public string Header;
+    public string Explain;
+    public string Effect;
+    public string Energy;
+
+    [Min(1)]
+    public int Stars;
+
+    public Sprite Icon;
 }

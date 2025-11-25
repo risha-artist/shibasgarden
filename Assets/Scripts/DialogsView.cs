@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DialogsView : MonoBehaviour {
     private List<string> _found = new List<string>();
@@ -20,6 +21,15 @@ public class DialogsView : MonoBehaviour {
     [SerializeField]
     private GameObject _questView, _badgeView;
 
+    [SerializeField]
+    private Slider _slider;
+
+    [SerializeField]
+    private Animation _reactAnimation;
+
+    [SerializeField]
+    private AnimationClip _questPop;
+
     private CancellationTokenSource _cts = new CancellationTokenSource();
 
     public void Increment(string discovery) {
@@ -29,10 +39,14 @@ public class DialogsView : MonoBehaviour {
 
         _found.Add(discovery);
 
+        _slider.value = _found.Count / (_xpTpLvlUp + 0f);
+
         if (_isGain) {
             return;
         }
 
+        _reactAnimation.Play(_questPop.name);
+        
         if (_found.Count >= _xpTpLvlUp) {
             _isGain = true;
             ShowLvlUp().Forget();
