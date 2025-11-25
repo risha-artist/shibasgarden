@@ -2028,6 +2028,7 @@ GameObject:
   - component: {fileID: 240697125}
   - component: {fileID: 240697126}
   - component: {fileID: 240697127}
+  - component: {fileID: 240697128}
   m_Layer: 5
   m_Name: Dialogs
   m_TagString: Untagged
@@ -2108,6 +2109,18 @@ MonoBehaviour:
   _slider: {fileID: 76096901}
   _reactAnimation: {fileID: 355156618}
   _questPop: {fileID: 7400000, guid: 995c004dac2cd3449aaa397d6268ba92, type: 2}
+--- !u!225 &240697128
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240697122}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &247795274
 GameObject:
   m_ObjectHideFlags: 0
