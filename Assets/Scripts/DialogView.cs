@@ -33,6 +33,14 @@ public class DialogView : MonoBehaviour {
 
     private CancellationTokenSource _cts;
 
+    private bool _isWaitingForContinue;
+    [SerializeField]
+    private GameObject _continueButton;
+
+    public void Continue() {
+        _isWaitingForContinue = false;
+    }
+
     public void SelectVariant(int index) {
         _dialogOptionsContainer.gameObject.SetActive(false);
 
@@ -57,6 +65,8 @@ public class DialogView : MonoBehaviour {
     }
 
     private async UniTask Reply(List<string> answers) {
+        
+        _continueButton.gameObject.SetActive(false);
         _replyContainer.SetActive(true);
         _speechPlayer.gameObject.SetActive(false);
         _speechGrandma.gameObject.SetActive(true);
@@ -70,7 +80,8 @@ public class DialogView : MonoBehaviour {
             string line = answers[index];
             float part = 1f / answers.Count;
             await Print(line, part * index, part * (index + 1));
-            await Utils.WaitForClick(_cts.Token);
+            _isWaitingForContinue = true;
+            await UniTask.WaitWhile(() => _isWaitingForContinue);
         }
     }
 
@@ -89,6 +100,7 @@ public class DialogView : MonoBehaviour {
             await UniTask.Delay(25, cancellationToken: token);
         }
 
+        _continueButton.gameObject.SetActive(true);
         _slider.value = maxPercent;
     }
 }
